@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """a type-annotated function"""
 from typing import Union
-"""a type-annotated function"""
 
 
 def sum_mixed_list(mxd_lst: Union[int, float]) -> float:
