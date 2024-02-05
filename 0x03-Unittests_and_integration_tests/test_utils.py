@@ -4,7 +4,7 @@ Parameterize a unit test
 """
 import unittest
 from utils import access_nested_map, get_json
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 from parameterized import parameterized
 from typing import Dict, Tuple, Any
 
@@ -43,6 +43,7 @@ class TestGetJson(unittest.TestCase):
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False}),
     ])
+    @patch('utils.requests.get')
     def test_get_json(self,
                       url: str,
                       payload: Dict[str, bool],
