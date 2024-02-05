@@ -4,6 +4,7 @@ Parameterize a unit test
 """
 import unittest
 from utils import access_nested_map, get_json
+from unittest.mock import Mock
 from parameterized import parameterized
 from typing import Dict, Tuple, Any
 
@@ -45,10 +46,9 @@ class TestGetJson(unittest.TestCase):
     def test_get_json(self,
                       url: str,
                       payload: Dict[str, bool],
-                      mock_get):
+                      mock_get: Mock):
         """Mock HTTP calls"""
         mock_get.return_value.json.return_value = payload
-        """test get json"""
         result = get_json(url)
         self.assertEqual(result, payload)
         mock_get.assert_called_once_with(url)
