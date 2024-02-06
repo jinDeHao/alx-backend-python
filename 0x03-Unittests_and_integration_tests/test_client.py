@@ -36,7 +36,7 @@ class TestGithubOrgClient(unittest.TestCase):
         Mocking a property
         """
         with patch('client.GithubOrgClient.org', new_callable=PropertyMock) as mock_property:
-            mock_property.return_value = {"repos_url": "omar"}
+            mock_property.return_value = {"de hao": "idhmaid", "repos_url": "omar"}
             inst = GithubOrgClient("idh")
             result = inst._public_repos_url
             self.assertEqual(result, "omar")
