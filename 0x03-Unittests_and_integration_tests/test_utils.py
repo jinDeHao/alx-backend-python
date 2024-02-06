@@ -60,7 +60,9 @@ class TestMemoize(unittest.TestCase):
     def test_memoize(self):
         """test memoize decorator"""
         class TestClass:
-
+            """
+            Test class
+            """
             def __init__(self) -> None:
                 """
                 initlaize instance attributes
