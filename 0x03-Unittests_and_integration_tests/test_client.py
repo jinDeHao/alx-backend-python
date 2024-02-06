@@ -5,7 +5,7 @@ Parameterize and patch as decorators
 import unittest
 from utils import access_nested_map, get_json, memoize
 from unittest.mock import Mock, patch, PropertyMock
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from typing import Dict, Tuple, Any
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
@@ -75,16 +75,24 @@ class TestGithubOrgClient(unittest.TestCase):
                          result)
 
 
+@parameterized_class([
+    {
+        'org_payload': TEST_PAYLOAD[0][0],
+        'repos_payload': TEST_PAYLOAD[0][1],
+        'expected_repos': TEST_PAYLOAD[0][2],
+        'apache2_repos': TEST_PAYLOAD[0][3],
+    },
+])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """
     Integration test: fixtures
     """
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls):
         """sets up and run the class"""
         my_payload = {
-            'https://api.github.com/orgs/google': TEST_PAYLOAD[0][0],
-            'https://api.github.com/orgs/google/repos': TEST_PAYLOAD[0][1],
+            'https://api.github.com/orgs/google': cls.org_payload,
+            'https://api.github.com/orgs/google/repos': cls.repos_payload,
         }
 
         def get_payload(url):
@@ -99,7 +107,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Integration tests"""
         self.assertEqual(
             GithubOrgClient("google").public_repos(),
-            TEST_PAYLOAD[0][2],
+            self.expected_repos,
+        )
+
+    def test_public_repos_with_license(self) -> None:
+        """not done with licenses"""
+        self.assertEqual(
+            GithubOrgClient("google").public_repos(license="apache-2.0"),
+            self.apache2_repos,
         )
 
     @classmethod
