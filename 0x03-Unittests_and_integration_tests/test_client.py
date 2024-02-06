@@ -8,6 +8,7 @@ from unittest.mock import Mock, patch, PropertyMock
 from parameterized import parameterized
 from typing import Dict, Tuple, Any
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -72,3 +73,36 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         self.assertEqual(GithubOrgClient("idh").has_license(repo, license_key),
                          result)
+
+
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """
+    Integration test: fixtures
+    """
+    @classmethod
+    def setUpClass(cls) -> None:
+        """sets up and run the class"""
+        my_payload = {
+            'https://api.github.com/orgs/google': TEST_PAYLOAD[0][0],
+            'https://api.github.com/orgs/google/repos': TEST_PAYLOAD[0][1],
+        }
+
+        def get_payload(url):
+            """get the payload by mocking it"""
+            return Mock(**{'json.return_value\
+': my_payload[url]}) if url in my_payload else None
+
+        cls.get_patcher = patch("requests.get", side_effect=get_payload)
+        cls.get_patcher.start()
+
+    def test_public_repos(self):
+        """Integration tests"""
+        self.assertEqual(
+            GithubOrgClient("google").public_repos(),
+            TEST_PAYLOAD[0][2],
+        )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """Removes the fixtures after done with testing"""
+        cls.get_patcher.stop()
