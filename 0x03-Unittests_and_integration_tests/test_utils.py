@@ -10,6 +10,9 @@ from typing import Dict, Tuple, Any
 
 
 class TestAccessNestedMap(unittest.TestCase):
+    """
+    Test Access Nested Map
+    """
 
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
@@ -38,6 +41,7 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
+    """Test Get Json Method"""
 
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
@@ -56,6 +60,7 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestMemoize(unittest.TestCase):
+    """Test Memoize"""
 
     def test_memoize(self):
         """test memoize decorator"""
