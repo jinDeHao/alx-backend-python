@@ -58,3 +58,17 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(result[0], "dehao")
             mock_property.assert_called_once()
             mock_get.assert_called_once()
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+    ])
+    def test_has_license(self,
+                         repo: Dict[str, Dict[str, str]],
+                         license_key: str,
+                         result: bool):
+        """
+        Parameterize
+        """
+        self.assertEqual(GithubOrgClient("idh").has_license(repo, license_key),
+                         result)
